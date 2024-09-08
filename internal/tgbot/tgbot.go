@@ -130,7 +130,7 @@ func (t *TgBot) handleCommand(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 }
 
 func (t *TgBot) handleInlineQuery(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
-	inlineResponseTimer := time.AfterFunc(5000*time.Millisecond, func() {
+	inlineResponseTimer := time.AfterFunc(500*time.Millisecond, func() {
 		var replyText string
 		translated, err := t.translator.Translate(update.InlineQuery.Query)
 		if err != nil {
