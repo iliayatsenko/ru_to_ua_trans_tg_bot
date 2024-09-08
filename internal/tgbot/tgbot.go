@@ -14,18 +14,32 @@ var staticKeyboard = tgbotapi.NewReplyKeyboard(
 )
 
 type TgBot struct {
-	token      string
-	greeting   string
-	errorMsg   string
-	translator *translator.Translator
+	Name                  string
+	Link                  string
+	token                 string
+	greeting              string
+	errorMsg              string
+	translator            *translator.Translator
+	otherBotsDiscoverFunc func() map[string]string
 }
 
-func New(token, greeting, errorMsg string, translator *translator.Translator) *TgBot {
+func New(
+	name,
+	link,
+	token,
+	greeting,
+	errorMsg string,
+	translator *translator.Translator,
+	otherBotsDiscoverFunc func() map[string]string,
+) *TgBot {
 	return &TgBot{
-		token:      token,
-		greeting:   greeting,
-		errorMsg:   errorMsg,
-		translator: translator,
+		Name:                  name,
+		Link:                  link,
+		token:                 token,
+		greeting:              greeting,
+		errorMsg:              errorMsg,
+		translator:            translator,
+		otherBotsDiscoverFunc: otherBotsDiscoverFunc,
 	}
 }
 
@@ -66,14 +80,16 @@ func (t *TgBot) PollTgApiAndRespond() {
 		if update.Message.IsCommand() {
 			switch update.Message.Command() {
 			case "otherBots":
+				otherBots := t.otherBotsDiscoverFunc()
+
+				otherBotButtons := []tgbotapi.InlineKeyboardButton{}
+				for name, link := range otherBots {
+					otherBotButtons = append(otherBotButtons, tgbotapi.NewInlineKeyboardButtonURL(name, link))
+				}
+
 				var otherBotsKeyboard = tgbotapi.NewInlineKeyboardMarkup(
 					tgbotapi.NewInlineKeyboardRow(
-						tgbotapi.NewInlineKeyboardButtonURL("Ru-Ua", "tg://resolve?domain=@RuToUaTranslatorBot"),
-						tgbotapi.NewInlineKeyboardButtonURL("Ua-Ru", "tg://resolve?domain=@UaToRuTranslatorBot"),
-						tgbotapi.NewInlineKeyboardButtonURL("En-Ru", "tg://resolve?domain=@EnToRuTranslatorBot"),
-						tgbotapi.NewInlineKeyboardButtonURL("Ru-En", "tg://resolve?domain=@RuToEnTranslatorBot"),
-						tgbotapi.NewInlineKeyboardButtonURL("En-Ua", "tg://resolve?domain=@EnToUaTranslatorBot"),
-						tgbotapi.NewInlineKeyboardButtonURL("Ua-En", "tg://resolve?domain=@UaToEnTranslatorBot"),
+						otherBotButtons...,
 					),
 				)
 				replyMsg.ReplyMarkup = otherBotsKeyboard
