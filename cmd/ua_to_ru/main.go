@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	"iliayatsenko1708/ru_to_ua_trans_tg_bot/internal/tgbot"
-	"iliayatsenko1708/ru_to_ua_trans_tg_bot/internal/translator"
-	"iliayatsenko1708/ru_to_ua_trans_tg_bot/internal/translator/client"
 	"os"
+	"tg_translate_bots/internal/tgbot"
+	"tg_translate_bots/internal/translator"
+	"tg_translate_bots/internal/translator/client"
 )
 
 func main() {

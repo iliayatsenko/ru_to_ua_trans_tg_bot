@@ -2,8 +2,8 @@ package tgbot
 
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"iliayatsenko1708/ru_to_ua_trans_tg_bot/internal/translator"
 	"log"
+	"tg_translate_bots/internal/translator"
 )
 
 var staticKeyboard = tgbotapi.NewReplyKeyboard(

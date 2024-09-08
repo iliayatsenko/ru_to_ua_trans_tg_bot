@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -35,7 +36,7 @@ func (client *DeeplClient) Translate(sourceLang, targetLang, text string) (strin
 		return "", err
 	}
 
-	req.Header.Add("Authorization", "DeepL-Auth-Key d568f7f5-af8f-4f68-917f-3e50e7b0f1ac:fx")
+	req.Header.Add("Authorization", "DeepL-Auth-Key "+os.Getenv("DEEPL_AUTH_KEY"))
 	req.Header.Add("Content-Type", "application/json")
 
 	res, err := httpClient.Do(req)
