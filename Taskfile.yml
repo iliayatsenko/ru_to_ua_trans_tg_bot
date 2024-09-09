@@ -1,0 +1,10 @@
+version: '3'
+
+dotenv: [ .env ]
+
+tasks:
+  deploy:
+    cmds:
+      - scp dist/tg_translation_bots_linux_amd64_v1/tg_translation_bots .env {{ .DEPLOY_USER }}@{{ .DEPLOY_HOST }}:{{ .DEPLOY_PATH }}/
+    requires:
+      vars: [ DEPLOY_USER, DEPLOY_HOST, DEPLOY_PATH]
