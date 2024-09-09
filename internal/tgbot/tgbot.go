@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const inlineResponseTimeout = 750 * time.Millisecond
+
 var staticKeyboard = tgbotapi.NewReplyKeyboard(
 	tgbotapi.NewKeyboardButtonRow(
 		tgbotapi.NewKeyboardButton("/help"),
@@ -104,15 +106,16 @@ func (t *TgBot) handleCommand(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	case "discover":
 		otherBots := t.otherBotsDiscoverFunc()
 
-		otherBotButtons := []tgbotapi.InlineKeyboardButton{}
+		otherBotButtons := [][]tgbotapi.InlineKeyboardButton{}
 		for name, link := range otherBots {
-			otherBotButtons = append(otherBotButtons, tgbotapi.NewInlineKeyboardButtonURL(name, link))
+			if name == t.Name {
+				continue
+			}
+			otherBotButtons = append(otherBotButtons, tgbotapi.NewInlineKeyboardRow(tgbotapi.NewInlineKeyboardButtonURL(name, link)))
 		}
 
 		var otherBotsKeyboard = tgbotapi.NewInlineKeyboardMarkup(
-			tgbotapi.NewInlineKeyboardRow(
-				otherBotButtons...,
-			),
+			otherBotButtons...,
 		)
 		replyMsg.ReplyMarkup = otherBotsKeyboard
 		replyMsg.Text = "\xF0\x9F\x93\x98" // blue book emoji
@@ -130,7 +133,7 @@ func (t *TgBot) handleCommand(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 }
 
 func (t *TgBot) handleInlineQuery(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
-	inlineResponseTimer := time.AfterFunc(500*time.Millisecond, func() {
+	inlineResponseTimer := time.AfterFunc(inlineResponseTimeout, func() {
 		var replyText string
 		translated, err := t.translator.Translate(update.InlineQuery.Query)
 		if err != nil {

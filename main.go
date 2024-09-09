@@ -24,7 +24,7 @@ func main() {
 	var bots = []*tgbot.TgBot{
 		tgbot.New(
 			"En-Ru",
-			"tg://resolve?domain=@EnToRuTranslatorBot",
+			"https://t.me/EnToRuTranslatorBot",
 			os.Getenv("EN_TO_RU_TG_BOT_TOKEN"),
 			"Hello. I translate all messages from English to Russian.",
 			"An error occurred while translating the message.",
@@ -37,7 +37,7 @@ func main() {
 		),
 		tgbot.New(
 			"En-Ua",
-			"tg://resolve?domain=@EnToUaTranslatorBot",
+			"https://t.me/EnToUaTranslatorBot",
 			os.Getenv("EN_TO_UA_TG_BOT_TOKEN"),
 			"Hello. I translate all messages from English to Ukrainian.",
 			"An error occurred while translating the message.",
@@ -50,7 +50,7 @@ func main() {
 		),
 		tgbot.New(
 			"Ru-En",
-			"tg://resolve?domain=@RuToEnTranslatorBot",
+			"https://t.me/RuToEnTranslatorBot",
 			os.Getenv("RU_TO_EN_TG_BOT_TOKEN"),
 			"Привет. Я перевожу все сообщения с русского на английский язык.",
 			"Произошла ошибка при переводе сообщения.",
@@ -63,7 +63,7 @@ func main() {
 		),
 		tgbot.New(
 			"Ru-Ua",
-			"tg://resolve?domain=@RuToUaTranslatorBot",
+			"https://t.me/RuToUaTranslatorBot",
 			os.Getenv("RU_TO_UA_TG_BOT_TOKEN"),
 			"Привет. Я перевожу все сообщения с русского на украинский язык.",
 			"Произошла ошибка при переводе сообщения.",
@@ -76,7 +76,7 @@ func main() {
 		),
 		tgbot.New(
 			"Ua-En",
-			"tg://resolve?domain=@UaToEnTranslatorBot",
+			"https://t.me/UaToEnTranslatorBot",
 			os.Getenv("UA_TO_EN_TG_BOT_TOKEN"),
 			"Привіт. Я перекладаю всі повідомлення з української на англійську мову.",
 			"Сталася помилка під час перекладу повідомлення.",
@@ -89,7 +89,7 @@ func main() {
 		),
 		tgbot.New(
 			"Ua-Ru",
-			"tg://resolve?domain=@UaToRuTranslatorBot",
+			"https://t.me/UaToRuTranslatorBot",
 			os.Getenv("UA_TO_RU_TG_BOT_TOKEN"),
 			"Привіт. Я перекладаю всі повідомлення з української на російську мову.",
 			"Сталася помилка під час перекладу повідомлення.",
