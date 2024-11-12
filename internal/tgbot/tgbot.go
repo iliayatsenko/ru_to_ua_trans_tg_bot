@@ -50,8 +50,8 @@ func New(
 	}
 }
 
-func (t *TgBot) PollTgApiAndRespond() {
-	bot, err := tgbotapi.NewBotAPI(t.token)
+func (tb *TgBot) PollTgApiAndRespond() {
+	bot, err := tgbotapi.NewBotAPI(tb.token)
 	if err != nil {
 		log.Println(err)
 		return
@@ -69,25 +69,25 @@ func (t *TgBot) PollTgApiAndRespond() {
 	for update := range updates {
 		// Telegram can send many types of updates depending on what your Bot is up to.
 		if update.InlineQuery != nil {
-			t.handleInlineQuery(update, bot)
+			tb.handleInlineQuery(update, bot)
 		} else if update.Message != nil {
 			if update.Message.IsCommand() {
-				t.handleCommand(update, bot)
+				tb.handleCommand(update, bot)
 			} else {
-				t.handleMessage(update, bot)
+				tb.handleMessage(update, bot)
 			}
 		}
 	}
 }
 
-func (t *TgBot) handleMessage(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
+func (tb *TgBot) handleMessage(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	replyMsg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 	replyMsg.ReplyMarkup = staticKeyboard
 
-	translated, err := t.translator.Translate(update.Message.Text)
+	translated, err := tb.translator.Translate(update.Message.Text)
 	if err != nil {
 		log.Println(err)
-		replyMsg.Text = t.errorMsg
+		replyMsg.Text = tb.errorMsg
 	} else {
 		replyMsg.Text = translated
 	}
@@ -98,17 +98,17 @@ func (t *TgBot) handleMessage(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	}
 }
 
-func (t *TgBot) handleCommand(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
+func (tb *TgBot) handleCommand(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	replyMsg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 	replyMsg.ReplyMarkup = staticKeyboard
 
 	switch update.Message.Command() {
 	case "discover":
-		otherBots := t.otherBotsDiscoverFunc()
+		otherBots := tb.otherBotsDiscoverFunc()
 
 		otherBotButtons := [][]tgbotapi.InlineKeyboardButton{}
 		for name, link := range otherBots {
-			if name == t.Name {
+			if name == tb.Name {
 				continue
 			}
 			otherBotButtons = append(otherBotButtons, tgbotapi.NewInlineKeyboardRow(tgbotapi.NewInlineKeyboardButtonURL(name, link)))
@@ -124,7 +124,7 @@ func (t *TgBot) handleCommand(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	case "start":
 		fallthrough
 	default:
-		replyMsg.Text = t.greeting
+		replyMsg.Text = tb.greeting
 	}
 
 	if _, err := bot.Send(replyMsg); err != nil {
@@ -132,13 +132,13 @@ func (t *TgBot) handleCommand(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	}
 }
 
-func (t *TgBot) handleInlineQuery(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
+func (tb *TgBot) handleInlineQuery(update tgbotapi.Update, bot *tgbotapi.BotAPI) {
 	inlineResponseTimer := time.AfterFunc(inlineResponseTimeout, func() {
 		var replyText string
-		translated, err := t.translator.Translate(update.InlineQuery.Query)
+		translated, err := tb.translator.Translate(update.InlineQuery.Query)
 		if err != nil {
 			log.Println(err)
-			replyText = t.errorMsg
+			replyText = tb.errorMsg
 		} else {
 			replyText = translated
 		}
@@ -153,11 +153,11 @@ func (t *TgBot) handleInlineQuery(update tgbotapi.Update, bot *tgbotapi.BotAPI) 
 		}
 	})
 
-	prevTimer, ok := t.inlineResponsesTimers[update.InlineQuery.ID]
+	prevTimer, ok := tb.inlineResponsesTimers[update.InlineQuery.ID]
 	if ok {
 		prevTimer.Stop()
-		delete(t.inlineResponsesTimers, update.InlineQuery.ID)
+		delete(tb.inlineResponsesTimers, update.InlineQuery.ID)
 	}
 
-	t.inlineResponsesTimers[update.InlineQuery.ID] = inlineResponseTimer
+	tb.inlineResponsesTimers[update.InlineQuery.ID] = inlineResponseTimer
 }

@@ -14,7 +14,7 @@ const url = "https://api-free.deepl.com/v2/translate"
 type DeeplClient struct {
 }
 
-func (client *DeeplClient) Translate(sourceLang, targetLang, text string) (string, error) {
+func (dc *DeeplClient) Translate(sourceLang, targetLang, text string) (string, error) {
 	payload := strings.NewReader(
 		fmt.Sprintf(
 			`{
